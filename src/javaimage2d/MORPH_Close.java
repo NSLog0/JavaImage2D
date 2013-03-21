@@ -15,7 +15,7 @@ import static com.googlecode.javacv.cpp.opencv_highgui.*;
 public class MORPH_Close {
 
     public static IplImage apply(IplImage _image, int _s, int __s) {
-        IplImage image = cvCreateImage(cvGetSize(_image), _image.depth(), 1);
+        IplImage image = cvCloneImage(_image);
         int kernelSize = _s;
         int kernelAnchorOffset = __s;
         IplConvKernel kernel = cvCreateStructuringElementEx(kernelSize, kernelSize, kernelAnchorOffset, kernelAnchorOffset,
