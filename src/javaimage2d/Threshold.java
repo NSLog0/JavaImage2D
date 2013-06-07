@@ -13,31 +13,13 @@ import static com.googlecode.javacv.cpp.opencv_imgproc.*;
  */
 public class Threshold {
 
-    public static IplImage apply(IplImage _image, int type) {
+    public static IplImage apply(IplImage _image) {
 
         IplImage image = cvCloneImage(_image);
         // user  OTUSU Algorithm 
         // cvAdaptiveThreshold(_image, image, 255, CV_ADAPTIVE_THRESH_GAUSSIAN_C, CV_THRESH_BINARY, 11, 9);
 
-        switch (type) {
-            case CV_THRESH_OTSU:
-                cvThreshold(_image, image, 127, 255, CV_THRESH_OTSU);
-                break;
-            case CV_THRESH_BINARY:
-                cvThreshold(_image, image, 127, 255, CV_THRESH_BINARY);
-                break;
-            case CV_THRESH_MASK:
-                cvThreshold(_image, image, 127, 255, CV_THRESH_MASK);
-                break;
-            case CV_THRESH_TRUNC:
-                cvThreshold(_image, image, 127, 255, CV_THRESH_TRUNC);
-                break;
-            default:
-                System.out.println("unknown thresh operation");
-
-        }
-
-
+        cvThreshold(_image, image, 127, 255, CV_THRESH_OTSU);
         return image;
     }
 }

@@ -9,6 +9,7 @@ import com.googlecode.javacv.Blobs;
 import static com.googlecode.javacv.cpp.opencv_core.*;
 import static com.googlecode.javacv.cpp.opencv_imgproc.*;
 import static com.googlecode.javacv.cpp.opencv_highgui.*;
+import java.awt.Rectangle;
 
 /**
  *
@@ -21,13 +22,14 @@ public class Detection {
         IplImage dest = cvLoadImage(path);
         IplImage WorkingImage = cvCloneImage(_image);
 
-        int MinArea = 80;
-        int ErodeCount = 4;
-        int DilateCount = 1;
+        int MinArea = 30;
+        //  int ErodeCount = 3;
+        //  int DilateCount = 1;
 
 
-        cvErode(WorkingImage, WorkingImage, null, ErodeCount);
-        cvDilate(WorkingImage, WorkingImage, null, DilateCount);
+        //  cvErode(WorkingImage, WorkingImage, null, ErodeCount);
+        //  cvDilate(WorkingImage, WorkingImage, null, DilateCount);
+        // Show.ShowImage(WorkingImage, "", WorkingImage.width());
 
         Blobs Regions = new Blobs();
         Regions.BlobAnalysis(
@@ -47,8 +49,19 @@ public class Detection {
             int MinY = (int) Region[Blobs.BLOBMINY];
             int MaxY = (int) Region[Blobs.BLOBMAXY];
             Highlight(dest, MinX, MinY, MaxX, MaxY, 1);
-        }
+            //Rectangle rect = new Rectangle(MinX, MinY, MaxX, MaxY);
+            //  CvRect rects = new CvRect(MinX, MinY, MaxX, MaxY);
+            // int x = MaxX - MinX;
+            // int y = MaxY - MinY;
+            // CvRect re = new CvRect(x, y, 50,50);
+            // cvSetImageROI(WorkingImage, re);
+            // IplImage cropped = cvCreateImage(cvGetSize(WorkingImage), WorkingImage.depth(), WorkingImage.nChannels());
+            // cvCopy(WorkingImage, cropped);
+            // Show.ShowImage(cropped, "ROI", cropped.width());
+            // cvResetImageROI(WorkingImage);
 
+        }
+        Show.ShowImage(WorkingImage, "s", WorkingImage.width());
         return dest;
     }
 

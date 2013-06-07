@@ -33,63 +33,65 @@ public class FindContours {
             cvSetImageROI(_image, cvRect(r.x(), r.y(), r.width(), r.height()));
             cvCopy(_image, rice);
             cvResetImageROI(_image);
-      
-//            CvMat mat = rice.asCvMat();
-//
-//            // find horizental 
-//            if (mat.cols() > mat.rows()) {
-//                IplImage trans = cvCreateImage(cvSize(mat.rows(), mat.cols()), rice.depth(), rice.nChannels());
-//                cvTranspose(rice, trans);
-//                cvFlip(trans, trans, 1);
-//                Show.ShowImage(trans, "Result Each Object", trans.sizeof());
-//                // cvSaveImage("C:\\img\\test"+(++totals)+".jpg", trans);
-//            } // end if 
 
-            // set center object 
-//            CvPoint2D32f center = new CvPoint2D32f(mat.cols() / 2.0F, mat.rows() / 2.0F);
-//            int x = 0, y = 0;
-//            float m = (float) mat.rows() / (float) mat.cols(), m1 = -1 * m;
-//            int fromleft = 0, fromright = 0;
-//            while (x < mat.cols()) {
-//                y = (int) m * x;
-//                if ((int) mat.get(y, x) == 255) {
-//                    fromleft++;
-//                }
-//
-//                x++;
-//            }
-//
-//            x = mat.cols();
-//            while (x > 0) {
-//                y = (int) m1 * x + mat.rows();
-//                if ((int) mat.get(y, x) == 255) {
-//                    fromright++;
-//                }
-//                x--;
-//            }
-//
-//            if (fromleft >= fromright) {
-//                cvLine(dest, cvPoint(r.x(), r.y()), cvPoint(r.x() + r.width(), r.y() + r.height()), CV_RGB(255, 0, 0), 1, 0, 0);
-//            } else {
-//                cvLine(dest, cvPoint(r.x() + r.width() / 2, r.y()), cvPoint(r.x() + r.width() / 2, r.y() + r.height()), CV_RGB(255, 0, 0), 1, 0, 0);
-//            }
-//
-//
-//            cvLine(dest, cvPoint(r.x() + r.width() / 2, r.y()), cvPoint(r.x() + r.width() / 2, r.y() + r.height()), CV_RGB(0, 0, 255), 1, 0, 0);
-//
-//            CvMat rot = null;
-//
-//
-//            if (fromleft >= fromright) {
-//                cv2DRotationMatrix(center, Math.atan((float) mat.cols() / mat.rows()) * -180 / 3.1415926535, 1, rot);
-//
-//            } else {
-//                cv2DRotationMatrix(center, Math.atan((float) mat.cols() / mat.rows()) * 180 / 3.1415926535, 1, rot);
-//
-//            }
-//
-//            cvWarpAffine(rice, rice, rot);
-            Show.ShowImage(rice, "Result Each Object", 20);
+            CvMat mat = new CvMat();
+            cvGetMat(rice, mat, null, 0);
+
+            // find horizental 
+            if (mat.cols() > mat.rows()) {
+                IplImage trans = cvCreateImage(cvSize(mat.rows(), mat.cols()), rice.depth(), rice.nChannels());
+                cvTranspose(rice, trans);
+                cvFlip(trans, trans, 1);
+                Show.ShowImage(trans, "Result Each Object", trans.sizeof());
+               // cvSaveImage("C:\\img\\test" + (++totals) + ".jpg", trans);
+            }   //end if 
+
+            /*  //set center object 
+             CvPoint2D32f center = new CvPoint2D32f(mat.cols() / 2.0F, mat.rows() / 2.0F);
+             int x = 0, y = 0;
+             float m = (float) mat.rows() / (float) mat.cols(), m1 = -1 * m;
+             int fromleft = 0, fromright = 0;
+             while (x < mat.cols()) {
+             y =  (int) (m * x);
+             if (mat.getIntBuffer() == 255) {
+             fromleft++;
+             }
+
+             x++;
+             }
+
+             x = mat.cols();
+             while (x > 0) {
+             y = (int) m1 * x + mat.rows();
+             if (mat.get(y,x) == 255) {
+             fromright++;
+             }
+             x--;
+             }
+
+             if (fromleft >= fromright) {
+             cvLine(dest, cvPoint(r.x(), r.y()), cvPoint(r.x() + r.width(), r.y() + r.height()), CV_RGB(255, 0, 0), 1, 0, 0);
+             } else {
+             cvLine(dest, cvPoint(r.x() + r.width() / 2, r.y()), cvPoint(r.x() + r.width() / 2, r.y() + r.height()), CV_RGB(255, 0, 0), 1, 0, 0);
+             }
+
+
+             cvLine(dest, cvPoint(r.x() + r.width() / 2, r.y()), cvPoint(r.x() + r.width() / 2, r.y() + r.height()), CV_RGB(0, 0, 255), 1, 0, 0);
+
+             CvMat rot = null;
+
+
+             if (fromleft >= fromright) {
+             cv2DRotationMatrix(center, Math.atan((float) mat.cols() / mat.rows()) * -180 / 3.1415926535, 1, rot);
+
+             } else {
+             cv2DRotationMatrix(center, Math.atan((float) mat.cols() / mat.rows()) * 180 / 3.1415926535, 1, rot);
+
+             }
+
+             cvWarpAffine(rice, rice, rot);
+             Show.ShowImage(rice, "Result Each Object", 20);
+             * */
         }
 
         return dest;

@@ -7,7 +7,6 @@ package javaimage2d;
 import static com.googlecode.javacv.cpp.opencv_core.*;
 import static com.googlecode.javacv.cpp.opencv_imgproc.*;
 import static com.googlecode.javacv.cpp.opencv_highgui.*;
-import com.sun.jna.*;
 import java.util.Vector;
 
 /**
