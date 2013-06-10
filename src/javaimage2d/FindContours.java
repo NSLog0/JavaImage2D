@@ -8,10 +8,12 @@ import com.googlecode.javacpp.Loader;
 import static com.googlecode.javacv.cpp.opencv_core.*;
 import static com.googlecode.javacv.cpp.opencv_imgproc.*;
 import static com.googlecode.javacv.cpp.opencv_highgui.*;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
 
 /**
  *
- * @author BMC
+ * @author BMCF
  */
 public class FindContours {
 
@@ -19,79 +21,106 @@ public class FindContours {
         IplImage dest = cvLoadImage(path);
         IplImage clonebin = cvCloneImage(_image);
 
-        CvSeq contours = new CvSeq();
-        CvSeq seq = null;
+
+        CvSeq contours = new CvSeq(null);
         CvMemStorage memory = CvMemStorage.create();
         cvFindContours(clonebin, memory, contours, Loader.sizeof(CvContour.class), CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
         CvRect r;
         int totals = 0;
-        for (seq = contours; seq != null; seq = seq.h_next()) {
-            r = cvBoundingRect(seq, 0);
-            cvRectangle(dest, cvPoint(r.x(), r.y()), cvPoint(r.x() + r.width(), r.y() + r.height()), CV_RGB(255, 0, 0), 1, 0, 0);
 
-            IplImage rice = cvCreateImage(cvSize(r.width(), r.height()), _image.depth(), _image.nChannels());
-            cvSetImageROI(_image, cvRect(r.x(), r.y(), r.width(), r.height()));
-            cvCopy(_image, rice);
-            cvResetImageROI(_image);
+        while (contours != null && !contours.isNull()) {
+            if (contours.elem_size() > 0) {
+                r = cvBoundingRect(contours, 0);
+                cvRectangle(dest, cvPoint(r.x(), r.y()), cvPoint(r.x() + r.width(), r.y() + r.height()), CV_RGB(255, 255, 0), 1, 0, 0);
 
-            CvMat mat = new CvMat();
-            cvGetMat(rice, mat, null, 0);
-
-            // find horizental 
-            if (mat.cols() > mat.rows()) {
-                IplImage trans = cvCreateImage(cvSize(mat.rows(), mat.cols()), rice.depth(), rice.nChannels());
-                cvTranspose(rice, trans);
-                cvFlip(trans, trans, 1);
-                Show.ShowImage(trans, "Result Each Object", trans.sizeof());
-               // cvSaveImage("C:\\img\\test" + (++totals) + ".jpg", trans);
-            }   //end if 
-
-            /*  //set center object 
-             CvPoint2D32f center = new CvPoint2D32f(mat.cols() / 2.0F, mat.rows() / 2.0F);
-             int x = 0, y = 0;
-             float m = (float) mat.rows() / (float) mat.cols(), m1 = -1 * m;
-             int fromleft = 0, fromright = 0;
-             while (x < mat.cols()) {
-             y =  (int) (m * x);
-             if (mat.getIntBuffer() == 255) {
-             fromleft++;
-             }
-
-             x++;
-             }
-
-             x = mat.cols();
-             while (x > 0) {
-             y = (int) m1 * x + mat.rows();
-             if (mat.get(y,x) == 255) {
-             fromright++;
-             }
-             x--;
-             }
-
-             if (fromleft >= fromright) {
-             cvLine(dest, cvPoint(r.x(), r.y()), cvPoint(r.x() + r.width(), r.y() + r.height()), CV_RGB(255, 0, 0), 1, 0, 0);
-             } else {
-             cvLine(dest, cvPoint(r.x() + r.width() / 2, r.y()), cvPoint(r.x() + r.width() / 2, r.y() + r.height()), CV_RGB(255, 0, 0), 1, 0, 0);
-             }
+                IplImage rice = cvCreateImage(cvSize(r.width(), r.height()), _image.depth(), _image.nChannels());
+                cvSetImageROI(_image, cvRect(r.x(), r.y(), r.width(), r.height()));
+                cvCopy(_image, rice);
+                cvResetImageROI(_image);
 
 
-             cvLine(dest, cvPoint(r.x() + r.width() / 2, r.y()), cvPoint(r.x() + r.width() / 2, r.y() + r.height()), CV_RGB(0, 0, 255), 1, 0, 0);
+                // find horizental 
+                if (rice.width() > rice.height()) {
+                    CvMat mat = new CvMat();
+                    cvGetMat(rice, mat, null, 1);
+                    IplImage trans = cvCreateImage(cvSize(mat.rows(), mat.cols()), rice.depth(), rice.nChannels());
+                    cvTranspose(rice, trans);
+                    cvFlip(trans, trans, 1);
+                    rice = null;
+                    rice = cvCreateImage(cvSize(trans.width(), trans.height()), trans.depth(), trans.nChannels());
+                    rice = cvCloneImage(trans);
+                    //cvSaveImage("C:\\img\\test" + (++totals) + ".jpg", trans);
+                }   //end if 
+                //cvShowImage("L", rice);
+                //  Show.ShowImage(rice, ":", rice.width());
+                //set center object 
+                CvPoint2D32f center = new CvPoint2D32f(rice.width() / 2.0f, rice.height() / 2.0f);
+                int x = 0, y;
+                float m = (float) rice.height() / (float) rice.width(), m1 = -1 * m;
+                int fromleft = 0, fromright = 0;
+                ByteBuffer buffer = rice.getByteBuffer();
 
-             CvMat rot = null;
+                CvMat mat = new CvMat();
+                cvGetMat(rice, mat, null, 1);
+                while (x < mat.cols()) {
+                    y = (int) (m * x);
+
+                    int index = x * rice.widthStep() + y;
+                    int value = buffer.get(index) & 0xFF;
+                    if (value == 255) {
+                        fromleft++;
+                    }
+
+                    x++;
+                }
 
 
-             if (fromleft >= fromright) {
-             cv2DRotationMatrix(center, Math.atan((float) mat.cols() / mat.rows()) * -180 / 3.1415926535, 1, rot);
+                x = mat.cols();
+                while (x > 0) {
+                    y = (int) m1 * x + mat.rows();
 
-             } else {
-             cv2DRotationMatrix(center, Math.atan((float) mat.cols() / mat.rows()) * 180 / 3.1415926535, 1, rot);
+                    int index = y * rice.widthStep() + x;
+                    int value = buffer.get(index) & 0xFF;
+                    if (value == 255) {
+                        fromright++;
 
-             }
+                    }
+                    x--;
+                }
 
-             cvWarpAffine(rice, rice, rot);
-             Show.ShowImage(rice, "Result Each Object", 20);
-             * */
+                if (fromleft >= fromright) {
+                    cvLine(dest, cvPoint(r.x(), r.y()), cvPoint(r.x() + r.width(), r.y() + r.height()), CV_RGB(255, 0, 0), 1, 0, 0);
+                    System.out.println(fromleft + "::" + fromright);
+                } else {
+                    cvLine(dest, cvPoint(r.x() + r.width(), r.y()), cvPoint(r.x(), r.y() + r.height()), CV_RGB(255, 0, 0), 1, 0, 0);
+                    System.out.println(fromleft + "::" + fromright);
+                }
+
+                cvLine(dest, cvPoint(r.x() + r.width() / 2, r.y()), cvPoint(r.x() + r.width() / 2, r.y() + r.height()), CV_RGB(0, 0, 255), 1, 0, 0);
+
+                CvMat rot = cvCreateMat(2, 3, CV_32FC1);
+
+                double angle = Math.atan((double) mat.cols() / (double) mat.rows()) * 180 / 3.1415926535;
+                if (fromleft >= fromright) {
+                    cv2DRotationMatrix(center, -angle, 1.0, rot);
+
+                } else {
+                    cv2DRotationMatrix(center, angle, 1.0, rot);
+
+                }
+
+                // IplImage output = cvCreateImage(cvGetSize(rice), rice.depth(), 1);
+                if (Math.abs(angle) > 20) {
+                    cvWarpAffine(rice, rice, rot);
+                }
+                cvShowImage(":", rice);
+                cvWaitKey();
+                //Show.ShowImage(rice, "Show Origrnal Image", rice.width());
+                //System.out.println(mat.cols() + " " + mat.rows() + " " + (double) mat.cols() / mat.rows()
+                //         + " " + Math.atan((double) mat.cols() / (double) mat.rows()) * -180 / 3.1415926535);
+                contours = contours.h_next();
+
+            }
         }
 
         return dest;
