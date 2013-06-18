@@ -9,7 +9,7 @@ import static com.googlecode.javacv.cpp.opencv_core.*;
 import static com.googlecode.javacv.cpp.opencv_imgproc.*;
 import static com.googlecode.javacv.cpp.opencv_highgui.*;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
+
 
 /**
  *

@@ -27,7 +27,7 @@ public class Detection {
         //  int DilateCount = 1;
 
 
-        //  cvErode(WorkingImage, WorkingImage, null, ErodeCount);
+        // cvErode(WorkingImage, WorkingImage, null, ErodeCount);
         //  cvDilate(WorkingImage, WorkingImage, null, DilateCount);
         // Show.ShowImage(WorkingImage, "", WorkingImage.width());
 

@@ -16,8 +16,8 @@ public class Gaussian {
     public static IplImage apply(IplImage _image, int _s) {
 
         IplImage image = cvCloneImage(_image);
-        
-        
+
+
         // check has image
         // call blur image and gaussian size
         // kernel size = s3 , 5 , 7 , 9 , 11
