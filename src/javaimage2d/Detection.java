@@ -49,16 +49,6 @@ public class Detection {
             int MinY = (int) Region[Blobs.BLOBMINY];
             int MaxY = (int) Region[Blobs.BLOBMAXY];
             Highlight(dest, MinX, MinY, MaxX, MaxY, 1);
-            //Rectangle rect = new Rectangle(MinX, MinY, MaxX, MaxY);
-            //  CvRect rects = new CvRect(MinX, MinY, MaxX, MaxY);
-            // int x = MaxX - MinX;
-            // int y = MaxY - MinY;
-            // CvRect re = new CvRect(x, y, 50,50);
-            // cvSetImageROI(WorkingImage, re);
-            // IplImage cropped = cvCreateImage(cvGetSize(WorkingImage), WorkingImage.depth(), WorkingImage.nChannels());
-            // cvCopy(WorkingImage, cropped);
-            // Show.ShowImage(cropped, "ROI", cropped.width());
-            // cvResetImageROI(WorkingImage);
 
         }
         Show.ShowImage(WorkingImage, "s", WorkingImage.width());

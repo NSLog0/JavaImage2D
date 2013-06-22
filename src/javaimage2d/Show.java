@@ -27,7 +27,7 @@ public class Show {
     }
     public static void ShowImage(opencv_core.IplImage image, String caption, int width, int height)
     {
-        CanvasFrame canvas = new CanvasFrame(caption);   // gamma=1
+        CanvasFrame canvas = new CanvasFrame(caption,0);   // gamma=1
         canvas.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
         canvas.setCanvasSize(width, height);
         canvas.showImage(image);

@@ -5,22 +5,22 @@
 package javaimage2d;
 
 import com.googlecode.javacpp.Loader;
+import com.googlecode.javacv.cpp.cvkernels;
 import static com.googlecode.javacv.cpp.opencv_core.*;
 import static com.googlecode.javacv.cpp.opencv_imgproc.*;
 import static com.googlecode.javacv.cpp.opencv_highgui.*;
 import java.nio.ByteBuffer;
 
-
 /**
  *
  * @author BMCF
  */
-public class FindContours {
+public class VerticalRotate {
 
-    public static IplImage apply(IplImage _image, String path) {
-        IplImage dest = cvLoadImage(path);
+    public static IplImage apply(IplImage _image , IplImage _image1) {
+        IplImage dest = cvCloneImage(_image1);
         IplImage clonebin = cvCloneImage(_image);
-
+       
 
         CvSeq contours = new CvSeq(null);
         CvMemStorage memory = CvMemStorage.create();
@@ -50,9 +50,10 @@ public class FindContours {
                     rice = cvCreateImage(cvSize(trans.width(), trans.height()), trans.depth(), trans.nChannels());
                     rice = cvCloneImage(trans);
                     //cvSaveImage("C:\\img\\test" + (++totals) + ".jpg", trans);
-                }   //end if 
-                //cvShowImage("L", rice);
-                //  Show.ShowImage(rice, ":", rice.width());
+                }
+                // cvShowImage("L", rice);
+                //cvWaitKey();
+                //Show.ShowImage(rice, ":", rice.width());
                 //set center object 
                 CvPoint2D32f center = new CvPoint2D32f(rice.width() / 2.0f, rice.height() / 2.0f);
                 int x = 0, y;
@@ -90,10 +91,10 @@ public class FindContours {
 
                 if (fromleft >= fromright) {
                     cvLine(dest, cvPoint(r.x(), r.y()), cvPoint(r.x() + r.width(), r.y() + r.height()), CV_RGB(255, 0, 0), 1, 0, 0);
-                    System.out.println(fromleft + "::" + fromright);
+                    //System.out.println(fromleft + "::" + fromright);
                 } else {
                     cvLine(dest, cvPoint(r.x() + r.width(), r.y()), cvPoint(r.x(), r.y() + r.height()), CV_RGB(255, 0, 0), 1, 0, 0);
-                    System.out.println(fromleft + "::" + fromright);
+                    //System.out.println(fromleft + "::" + fromright);
                 }
 
                 cvLine(dest, cvPoint(r.x() + r.width() / 2, r.y()), cvPoint(r.x() + r.width() / 2, r.y() + r.height()), CV_RGB(0, 0, 255), 1, 0, 0);
@@ -113,16 +114,15 @@ public class FindContours {
                 if (Math.abs(angle) > 20) {
                     cvWarpAffine(rice, rice, rot);
                 }
-                cvShowImage(":", rice);
-                cvWaitKey();
+                //cvShowImage(":", rice);
+               // cvWaitKey();
                 //Show.ShowImage(rice, "Show Origrnal Image", rice.width());
                 //System.out.println(mat.cols() + " " + mat.rows() + " " + (double) mat.cols() / mat.rows()
                 //         + " " + Math.atan((double) mat.cols() / (double) mat.rows()) * -180 / 3.1415926535);
-                contours = contours.h_next();
 
             }
+            contours = contours.h_next();
         }
-
         return dest;
     }
 }
