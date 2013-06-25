@@ -19,42 +19,22 @@ public class JavaImage2D {
 
     public JavaImage2D() {
 
+
         String fileName = "C:\\Documents and Settings\\pratchaya\\Desktop\\t.jpg";
         IplImage image = cvLoadImage(fileName);
-        IplImage dest = cvCreateImage(cvSize(image.width(), image.height()), image.depth(), image.nChannels());
-        IplImage result = cvCreateImage(cvSize(image.width(), image.height()), image.depth(), image.nChannels());
-
-        //IplImage destbin = cvCreateImage(cvSize(image.width(), image.height()), image.depth(), image.nChannels());
+        IplImage dest = cvCreateImage(cvGetSize(image), 8, 1);
         dest = PerspectiveTransform.apply(image, image);
-        result = cvCloneImage(dest);
-        dest = Gaussian.apply(dest, 3);
-        cvAddWeighted(dest, 1.5, dest, -0.5, 0, dest);
-        dest = Grayscale.apply(dest);
-        dest = Threshold.apply(dest);
-        dest = VerticalRotate.apply(dest, result);
-        //cvSaveImage("C:\\Documents and Settings\\pratchaya\\Desktop\\test.jpg", dest);
-
-        // add sharpness
-        //dst = Gaussian.apply(image, 3);
-        //cvAddWeighted(dst, 1.5, dst, -0.5, 0, dst);
-        //dst = Canny.apply(dst);
-
-        //add sharpness
-        //CvMat kernel = CvMat.create(3, 3, CV_32FC1);
-        //kernel.put(0, 9, 0, 9, -36, 9, 0, 9, 0);
-        // cvFilter2D(image, image, kernel, new CvPoint(-1, -1));
-
-        //  image = FindContours.apply(image, fileName);
+        dest = VerticalRotate.apply(dest);
+        //  dest = Threshold.apply(dest);
         // Show image on window.
         cvShowImage(":", dest);
 
         // deallocate memory
         // wait windows 
         cvWaitKey();
+
         cvReleaseImage(image);
         cvReleaseImage(dest);
-        cvReleaseImage(result);
-
 
     }
 

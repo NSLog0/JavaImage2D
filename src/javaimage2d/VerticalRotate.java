@@ -17,11 +17,14 @@ import java.nio.ByteBuffer;
  */
 public class VerticalRotate {
 
-    public static IplImage apply(IplImage _image , IplImage _image1) {
-        IplImage dest = cvCloneImage(_image1);
+    public static IplImage apply(IplImage _image) {
+        IplImage dest = cvCloneImage(_image);
         IplImage clonebin = cvCloneImage(_image);
-       
-
+        IplImage bin = cvCreateImage(cvGetSize(_image), 8, 1);
+        clonebin = Grayscale.apply(clonebin);
+        clonebin = Gaussian.apply(clonebin, 3);
+        clonebin = Threshold.apply(clonebin);
+        bin = cvCloneImage(clonebin);
         CvSeq contours = new CvSeq(null);
         CvMemStorage memory = CvMemStorage.create();
         cvFindContours(clonebin, memory, contours, Loader.sizeof(CvContour.class), CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
@@ -33,11 +36,11 @@ public class VerticalRotate {
                 r = cvBoundingRect(contours, 0);
                 cvRectangle(dest, cvPoint(r.x(), r.y()), cvPoint(r.x() + r.width(), r.y() + r.height()), CV_RGB(255, 255, 0), 1, 0, 0);
 
-                IplImage rice = cvCreateImage(cvSize(r.width(), r.height()), _image.depth(), _image.nChannels());
-                cvSetImageROI(_image, cvRect(r.x(), r.y(), r.width(), r.height()));
-                cvCopy(_image, rice);
-                cvResetImageROI(_image);
 
+                IplImage rice = cvCreateImage(cvSize(r.width(), r.height()), 8, 1);
+                cvSetImageROI(bin, cvRect(r.x(), r.y(), r.width(), r.height()));
+                cvCopy(bin, rice);
+                cvResetImageROI(bin);
 
                 // find horizental 
                 if (rice.width() > rice.height()) {
@@ -49,11 +52,8 @@ public class VerticalRotate {
                     rice = null;
                     rice = cvCreateImage(cvSize(trans.width(), trans.height()), trans.depth(), trans.nChannels());
                     rice = cvCloneImage(trans);
-                    //cvSaveImage("C:\\img\\test" + (++totals) + ".jpg", trans);
                 }
-                // cvShowImage("L", rice);
-                //cvWaitKey();
-                //Show.ShowImage(rice, ":", rice.width());
+
                 //set center object 
                 CvPoint2D32f center = new CvPoint2D32f(rice.width() / 2.0f, rice.height() / 2.0f);
                 int x = 0, y;
@@ -91,10 +91,10 @@ public class VerticalRotate {
 
                 if (fromleft >= fromright) {
                     cvLine(dest, cvPoint(r.x(), r.y()), cvPoint(r.x() + r.width(), r.y() + r.height()), CV_RGB(255, 0, 0), 1, 0, 0);
-                    //System.out.println(fromleft + "::" + fromright);
+                    System.out.println(fromleft + "::" + fromright);
                 } else {
                     cvLine(dest, cvPoint(r.x() + r.width(), r.y()), cvPoint(r.x(), r.y() + r.height()), CV_RGB(255, 0, 0), 1, 0, 0);
-                    //System.out.println(fromleft + "::" + fromright);
+                    System.out.println(fromleft + "::" + fromright);
                 }
 
                 cvLine(dest, cvPoint(r.x() + r.width() / 2, r.y()), cvPoint(r.x() + r.width() / 2, r.y() + r.height()), CV_RGB(0, 0, 255), 1, 0, 0);
@@ -114,15 +114,20 @@ public class VerticalRotate {
                 if (Math.abs(angle) > 20) {
                     cvWarpAffine(rice, rice, rot);
                 }
-                //cvShowImage(":", rice);
-               // cvWaitKey();
+                cvShowImage(":", rice);
+                cvWaitKey();
                 //Show.ShowImage(rice, "Show Origrnal Image", rice.width());
                 //System.out.println(mat.cols() + " " + mat.rows() + " " + (double) mat.cols() / mat.rows()
                 //         + " " + Math.atan((double) mat.cols() / (double) mat.rows()) * -180 / 3.1415926535);
 
+
+                contours = contours.h_next();
+
             }
-            contours = contours.h_next();
+
         }
+
         return dest;
+
     }
 }

@@ -15,13 +15,13 @@ public class Threshold {
 
     public static IplImage apply(IplImage _image) {
 
-        IplImage image = cvCreateImage(cvGetSize(_image), 8, 1);
-
-        // user  OTUSU Algorithm 
-        // cvAdaptiveThreshold(_image, image, 255, CV_ADAPTIVE_THRESH_GAUSSIAN_C, CV_THRESH_OTSU, 11, 9);
-
-        // cvAdaptiveThreshold(_image, image, 255, CV_ADAPTIVE_THRESH_GAUSSIAN_C, CV_THRESH_BINARY,
-        cvThreshold(_image, image, 127, 255, CV_THRESH_OTSU);
+       // IplImage image = cvCreateImage(cvGetSize(_image), 8, 1);
+        IplImage image = cvCloneImage(_image);
+        //cvAdaptiveThreshold(_image, image, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY_INV, 5, 4);
+         //CvScalar v = cvAvg(image, image);
+       // System.out.println(v.magnitude());
+        cvThreshold(_image, image, 190, 255, CV_THRESH_BINARY);
+        
         return image;
     }
 }
