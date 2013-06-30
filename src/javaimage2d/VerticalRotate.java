@@ -24,6 +24,8 @@ public class VerticalRotate {
         clonebin = Grayscale.apply(clonebin);
         clonebin = Gaussian.apply(clonebin, 3);
         clonebin = Threshold.apply(clonebin);
+        cvShowImage(":", clonebin);
+        cvWaitKey();
         bin = cvCloneImage(clonebin);
         CvSeq contours = new CvSeq(null);
         CvMemStorage memory = CvMemStorage.create();
@@ -120,8 +122,9 @@ public class VerticalRotate {
                 //System.out.println(mat.cols() + " " + mat.rows() + " " + (double) mat.cols() / mat.rows()
                 //         + " " + Math.atan((double) mat.cols() / (double) mat.rows()) * -180 / 3.1415926535);
 
-
                 contours = contours.h_next();
+                cvShowImage(":", dest);
+                cvWaitKey();
 
             }
 

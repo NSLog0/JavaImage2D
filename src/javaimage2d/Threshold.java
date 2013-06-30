@@ -20,7 +20,7 @@ public class Threshold {
         //cvAdaptiveThreshold(_image, image, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY_INV, 5, 4);
          //CvScalar v = cvAvg(image, image);
        // System.out.println(v.magnitude());
-        cvThreshold(_image, image, 190, 255, CV_THRESH_BINARY);
+        cvThreshold(_image, image, 109, 255, CV_THRESH_BINARY);
         
         return image;
     }

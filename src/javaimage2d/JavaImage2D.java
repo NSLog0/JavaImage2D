@@ -20,14 +20,22 @@ public class JavaImage2D {
     public JavaImage2D() {
 
 
-        String fileName = "C:\\Documents and Settings\\pratchaya\\Desktop\\t.jpg";
+        String fileName = "C:\\Documents and Settings\\pratchaya\\Desktop\\403.jpg";
         IplImage image = cvLoadImage(fileName);
         IplImage dest = cvCreateImage(cvGetSize(image), 8, 1);
         dest = PerspectiveTransform.apply(image, image);
+
+        //image = Grayscale.apply(image);
+        //image = Gaussian.apply(image, 5);
+        //image = Threshold.apply(image);
+        //System.out.println(dest.width() + " " + dest.height());
         dest = VerticalRotate.apply(dest);
-        //  dest = Threshold.apply(dest);
+        //dest = Grayscale.apply(dest);
+        //dest = Gaussian.apply(dest, 5);
+        //dest = Threshold.apply(dest);
         // Show image on window.
         cvShowImage(":", dest);
+        //cvSaveImage("C:\\Documents and Settings\\pratchaya\\Desktop\\g.jpg", dest);
 
         // deallocate memory
         // wait windows 
