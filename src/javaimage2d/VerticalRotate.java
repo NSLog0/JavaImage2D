@@ -17,34 +17,50 @@ import java.nio.ByteBuffer;
  */
 public class VerticalRotate {
 
+    public static IplImage rotationMatrix(IplImage _image, int fromleft, int fromright, CvPoint2D32f center, double angle) {
+        IplImage dest = cvCloneImage(_image);
+        CvMat rot = cvCreateMat(2, 3, CV_32FC1);
+
+        if (fromleft >= fromright) {
+            cv2DRotationMatrix(center, -angle, 1.0, rot);
+
+        } else {
+            cv2DRotationMatrix(center, angle, 1.0, rot);
+
+        }
+
+        //if (Math.abs(angle) > 20) {
+        cvWarpAffine(dest, dest, rot);
+        //  }
+
+        return dest;
+    }
+
     public static IplImage apply(IplImage _image) {
         IplImage dest = cvCloneImage(_image);
         IplImage clonebin = cvCloneImage(_image);
         IplImage bin = cvCreateImage(cvGetSize(_image), 8, 1);
         clonebin = Grayscale.apply(clonebin);
-        clonebin = Gaussian.apply(clonebin, 3);
+        clonebin = Gaussian.apply(clonebin, 5);
         clonebin = Threshold.apply(clonebin);
-        cvShowImage(":", clonebin);
-        cvWaitKey();
+
         bin = cvCloneImage(clonebin);
         CvSeq contours = new CvSeq(null);
         CvMemStorage memory = CvMemStorage.create();
         cvFindContours(clonebin, memory, contours, Loader.sizeof(CvContour.class), CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
         CvRect r;
-        int totals = 0;
 
         while (contours != null && !contours.isNull()) {
             if (contours.elem_size() > 0) {
                 r = cvBoundingRect(contours, 0);
                 cvRectangle(dest, cvPoint(r.x(), r.y()), cvPoint(r.x() + r.width(), r.y() + r.height()), CV_RGB(255, 255, 0), 1, 0, 0);
 
-
                 IplImage rice = cvCreateImage(cvSize(r.width(), r.height()), 8, 1);
                 cvSetImageROI(bin, cvRect(r.x(), r.y(), r.width(), r.height()));
                 cvCopy(bin, rice);
                 cvResetImageROI(bin);
 
-                // find horizental 
+                //find horizental 
                 if (rice.width() > rice.height()) {
                     CvMat mat = new CvMat();
                     cvGetMat(rice, mat, null, 1);
@@ -73,10 +89,8 @@ public class VerticalRotate {
                     if (value == 255) {
                         fromleft++;
                     }
-
                     x++;
                 }
-
 
                 x = mat.cols();
                 while (x > 0) {
@@ -86,45 +100,31 @@ public class VerticalRotate {
                     int value = buffer.get(index) & 0xFF;
                     if (value == 255) {
                         fromright++;
-
                     }
                     x--;
                 }
 
-                if (fromleft >= fromright) {
-                    cvLine(dest, cvPoint(r.x(), r.y()), cvPoint(r.x() + r.width(), r.y() + r.height()), CV_RGB(255, 0, 0), 1, 0, 0);
-                    System.out.println(fromleft + "::" + fromright);
-                } else {
-                    cvLine(dest, cvPoint(r.x() + r.width(), r.y()), cvPoint(r.x(), r.y() + r.height()), CV_RGB(255, 0, 0), 1, 0, 0);
-                    System.out.println(fromleft + "::" + fromright);
-                }
-
                 cvLine(dest, cvPoint(r.x() + r.width() / 2, r.y()), cvPoint(r.x() + r.width() / 2, r.y() + r.height()), CV_RGB(0, 0, 255), 1, 0, 0);
-
-                CvMat rot = cvCreateMat(2, 3, CV_32FC1);
-
                 double angle = Math.atan((double) mat.cols() / (double) mat.rows()) * 180 / 3.1415926535;
-                if (fromleft >= fromright) {
-                    cv2DRotationMatrix(center, -angle, 1.0, rot);
+                rice = rotationMatrix(rice, fromleft, fromright, center, angle);
 
-                } else {
-                    cv2DRotationMatrix(center, angle, 1.0, rot);
+                int[] max = FindABContext.Max(rice);
+                int[] min = FindABContext.min(rice);
 
+                angle = Math.atan((double) (min[1] - max[1]) / (min[0] - max[0])); // หมุน
+                double ang = 90 - Math.toDegrees(angle);
+                if (min[0] > max[0]) {
+                    ang *= -1;
                 }
 
-                // IplImage output = cvCreateImage(cvGetSize(rice), rice.depth(), 1);
-                if (Math.abs(angle) > 20) {
-                    cvWarpAffine(rice, rice, rot);
-                }
+                rice = rotationMatrix(rice, fromleft, fromright, center, ang);
                 cvShowImage(":", rice);
+                // cvSaveImage("C:\\Documents and Settings\\pratchaya\\Desktop\\r2.jpg", rice);
                 cvWaitKey();
-                //Show.ShowImage(rice, "Show Origrnal Image", rice.width());
-                //System.out.println(mat.cols() + " " + mat.rows() + " " + (double) mat.cols() / mat.rows()
-                //         + " " + Math.atan((double) mat.cols() / (double) mat.rows()) * -180 / 3.1415926535);
+
 
                 contours = contours.h_next();
-                cvShowImage(":", dest);
-                cvWaitKey();
+
 
             }
 

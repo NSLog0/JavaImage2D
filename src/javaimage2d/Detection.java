@@ -17,9 +17,9 @@ import java.awt.Rectangle;
  */
 public class Detection {
 
-    public static IplImage apply(IplImage _image, String path) {
+    public static void apply(IplImage _image) {
 
-        IplImage dest = cvLoadImage(path);
+        //IplImage dest = cvLoadImage(path);
         IplImage WorkingImage = cvCloneImage(_image);
 
         int MinArea = 30;
@@ -48,11 +48,13 @@ public class Detection {
             int MaxX = (int) Region[Blobs.BLOBMAXX];
             int MinY = (int) Region[Blobs.BLOBMINY];
             int MaxY = (int) Region[Blobs.BLOBMAXY];
-            Highlight(dest, MinX, MinY, MaxX, MaxY, 1);
-
+            Highlight(WorkingImage, MinX, MinY, MaxX, MaxY, 1);
+            System.out.println(MinX+":"+MinY+":"+MaxX+":"+MaxY);
         }
-        Show.ShowImage(WorkingImage, "s", WorkingImage.width());
-        return dest;
+        cvShowImage(":", WorkingImage);
+        cvWaitKey();
+        //Show.ShowImage(WorkingImage, "s", WorkingImage.width());
+        // return dest;
     }
 
     public static void Highlight(IplImage image, int xMin, int yMin, int xMax, int yMax, int Thick) {
