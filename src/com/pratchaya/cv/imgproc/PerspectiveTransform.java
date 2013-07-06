@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package javaimage2d;
+package com.pratchaya.cv.imgproc;
 
 import com.googlecode.javacpp.Loader;
 import com.googlecode.javacv.cpp.cvkernels;
@@ -22,7 +22,7 @@ public class PerspectiveTransform {
         IplImage clonebin = cvCloneImage(_image);
         clonebin = Grayscale.apply(clonebin);
         clonebin = Gaussian.apply(clonebin, 5);
-        clonebin = Threshold.apply(clonebin);
+        clonebin = Threshold.apply(clonebin, 109);
         IplImage dest = cvCloneImage(_image1);
         //set cornner for PerspectiveTransform
         CvPoint2D32f point = new CvPoint2D32f(4);
@@ -61,7 +61,7 @@ public class PerspectiveTransform {
             }
             contours = contours.h_next();
         }
-        System.out.println(_x + " " + _y);
+        
         point2.position(0).put(0, 0);
         point2.position(1).put(_x, 0);
         point2.position(2).put(_x, _y);

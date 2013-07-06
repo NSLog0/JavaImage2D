@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package javaimage2d;
+package com.pratchaya.cv.imgproc;
 
 import static com.googlecode.javacv.cpp.opencv_core.*;
 import static com.googlecode.javacv.cpp.opencv_imgproc.*;
@@ -13,14 +13,14 @@ import static com.googlecode.javacv.cpp.opencv_imgproc.*;
  */
 public class Threshold {
 
-    public static IplImage apply(IplImage _image) {
+    public static IplImage apply(IplImage _image , int c) {
 
        // IplImage image = cvCreateImage(cvGetSize(_image), 8, 1);
         IplImage image = cvCloneImage(_image);
         //cvAdaptiveThreshold(_image, image, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY_INV, 5, 4);
          //CvScalar v = cvAvg(image, image);
        // System.out.println(v.magnitude());
-        cvThreshold(_image, image, 109, 255, CV_THRESH_BINARY);
+        cvThreshold(_image, image, c, 255, CV_THRESH_BINARY);
         
         return image;
     }

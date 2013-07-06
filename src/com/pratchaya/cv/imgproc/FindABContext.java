@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package javaimage2d;
+package com.pratchaya.cv.imgproc;
 
 import static com.googlecode.javacv.cpp.opencv_core.*;
 import static com.googlecode.javacv.cpp.opencv_imgproc.*;
@@ -15,7 +15,7 @@ import java.nio.ByteBuffer;
  */
 public class FindABContext {
 
-    public static int[] Max(IplImage _image) {
+    public static int[] MaxContext(IplImage _image) {
         IplImage rice = cvCloneImage(_image);
 
         int a = 0, length = 0, haft = 0, x = 0, y = 0, z = 0;
@@ -67,7 +67,7 @@ public class FindABContext {
 
     }
 
-    public static int[] min(IplImage _image) {
+    public static int[] minContext(IplImage _image) {
         IplImage rice = cvCloneImage(_image);
         int a = 0, length = 0, haft = 0, x = 0, y = 0, z = 0;
         int[] min = new int[2];

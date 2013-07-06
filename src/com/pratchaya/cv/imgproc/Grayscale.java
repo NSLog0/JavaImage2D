@@ -1,4 +1,4 @@
-package javaimage2d;
+package com.pratchaya.cv.imgproc;
 
 import static com.googlecode.javacv.cpp.opencv_core.*;
 import static com.googlecode.javacv.cpp.opencv_imgproc.*;
