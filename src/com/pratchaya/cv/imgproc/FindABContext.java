@@ -15,7 +15,7 @@ import java.nio.ByteBuffer;
  */
 public class FindABContext {
 
-    public static int[] MaxContext(IplImage _image) {
+    public static int[] MaxContext(IplImage _image , double c) {
         IplImage rice = cvCloneImage(_image);
 
         int a = 0, length = 0, haft = 0, x = 0, y = 0, z = 0;
@@ -28,7 +28,7 @@ public class FindABContext {
         for (y = 0; y <= rice.height() - 1; y++) {
             for (x = 0; x <= rice.width() - 1; x++) {
                 double value = mat.get(y * rice.widthStep() + x * mat.channels());
-                if (value == 255.0) {
+                if (value == c) {
 
                     a++;
 
@@ -39,7 +39,7 @@ public class FindABContext {
                 }
 
                 if (x == 0) {
-                    if (value == 255.0) {
+                    if (value == c) {
                         end = x;
                     } else {
                         end = x;
@@ -67,7 +67,7 @@ public class FindABContext {
 
     }
 
-    public static int[] minContext(IplImage _image) {
+    public static int[] minContext(IplImage _image ,double c) {
         IplImage rice = cvCloneImage(_image);
         int a = 0, length = 0, haft = 0, x = 0, y = 0, z = 0;
         int[] min = new int[2];
@@ -81,7 +81,7 @@ public class FindABContext {
         for (y = rice.height() - 1; y >= 0; y--) {
             for (x = rice.width() - 1; x >= 0; x--) {
                 double value = mat.get(y * rice.widthStep() + x * mat.channels());
-                if (value == 255.0) {
+                if (value == c) {
                     a++;
                     end = x;
                     if (s) {
@@ -94,10 +94,10 @@ public class FindABContext {
             if (a == 0) {
                 continue MinLoop;
             } else {
-                //System.out.println("Total: " + a);
-                //System.out.println("Start: " + start);
-                // System.out.println("End: " + end);
-                // System.out.println("Center: " + ((a / 2) + end));
+//                System.out.println("Total: " + a);
+//                System.out.println("Start: " + start);
+//                System.out.println("End: " + end);
+//                System.out.println("Center: " + ((a / 2) + end));
                 z = (int) (((start + a) - start) / 2);
                 haft = end - start;
                 min[0] = (start + end) / 2;

@@ -13,14 +13,11 @@ import static com.googlecode.javacv.cpp.opencv_imgproc.*;
  */
 public class Threshold {
 
-    public static IplImage apply(IplImage _image , int c) {
+    public static IplImage apply(IplImage _image , int s , int e) {
 
-       // IplImage image = cvCreateImage(cvGetSize(_image), 8, 1);
         IplImage image = cvCloneImage(_image);
-        //cvAdaptiveThreshold(_image, image, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY_INV, 5, 4);
-         //CvScalar v = cvAvg(image, image);
-       // System.out.println(v.magnitude());
-        cvThreshold(_image, image, c, 255, CV_THRESH_BINARY);
+       
+        cvThreshold(_image, image, s, e, CV_THRESH_BINARY);
         
         return image;
     }

@@ -1,5 +1,8 @@
 package com.pratchaya.cv.imgproc;
 
+import com.googlecode.javacv.CanvasFrame;
+import com.googlecode.javacv.FrameGrabber;
+import com.googlecode.javacv.OpenCVFrameGrabber;
 import static com.googlecode.javacv.cpp.opencv_core.*;
 import static com.googlecode.javacv.cpp.opencv_imgproc.*;
 import static com.googlecode.javacv.cpp.opencv_highgui.*;
@@ -15,27 +18,42 @@ import static com.googlecode.javacv.cpp.opencv_highgui.*;
 public class Core_proc {
 
     public Core_proc() {
-        String fileName = "C:\\Documents and Settings\\pratchaya\\My Documents\\GitHub\\JavaImage2D\\image\\r2.png"; //"C:\\Documents and Settings\\pratchaya\\Desktop\\m403.jpg";
+        String fileName = "C:\\Documents and Settings\\pratchaya\\Desktop\\img\\M403.jpg"; //"C:\\Documents and Settings\\pratchaya\\Desktop\\m403.jpg";
         IplImage image = cvLoadImage(fileName);
-        IplImage dest = cvCreateImage(cvGetSize(image), 8, 1);
+        //cvShowImage(":", image);
+        // cvWaitKey();
 
-        //dest = PerspectiveTransform.apply(image, image);
+        //image = Grayscale.apply(image);
+        //image = Gaussian.apply(image, 3);
+        //image = Threshold.apply(image, 140, 255);
+
+        int[] rang = {109, 255};
+
         Classification c = new Classification();
         c.setResource(image);
-        c.setImgProc(109, 5);
+        c.setImgProc(rang, 3, true);
         c.classifier();
 
-        // deallocate memory
-        // wait windows 
-        //cvShowImage(":", dest);
+        //cvShowImage("final", c.dest2);
+        // System.out.println("broken: " + c.broken);
+        // System.out.println("Unbroken: " + c.unbroken);
+        //  System.out.println("Total: " + c.total);
+        cvShowImage("sdf", c.dest2);
         cvWaitKey();
 
+        // deallocate    memory
+        // wait windows 
+
+        //cvSaveImage("C:\\Documents and Settings\\pratchaya\\Desktop\\yy.jpg", c.dest2);
+
+        //cvShowImage("final", image);
+        //cvWaitKey();
         cvReleaseImage(image);
-        cvReleaseImage(dest);
+        //cvReleaseImage(dest);
 
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FrameGrabber.Exception {
         System.out.println("Start Program.");
         Core_proc j = new Core_proc();
         System.out.println("All Done.");

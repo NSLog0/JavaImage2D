@@ -16,26 +16,10 @@ import java.nio.ByteBuffer;
  */
 public class VerticalRotate {
 
-    public static IplImage rotationMatrix(IplImage _image, int fromleft, int fromright, CvPoint2D32f center, double angle) {
-        IplImage dest = cvCloneImage(_image);
-        CvMat rot = cvCreateMat(2, 3, CV_32FC1);
+    int[] max = new int[2];
+    int[] min = new int[2];
 
-        if (fromleft >= fromright) {
-            cv2DRotationMatrix(center, -angle, 1.0, rot);
-
-        } else {
-            cv2DRotationMatrix(center, angle, 1.0, rot);
-
-        }
-
-        //if (Math.abs(angle) > 20) {
-        cvWarpAffine(dest, dest, rot);
-        //  }
-
-        return dest;
-    }
-
-    public static IplImage apply(IplImage _image, CvRect _r) {
+    public IplImage apply(IplImage _image, CvRect _r) {
 
         CvRect r = _r;
         IplImage rice = cvCloneImage(_image);
@@ -87,8 +71,9 @@ public class VerticalRotate {
         double angle = Math.atan((double) mat.cols() / (double) mat.rows()) * 180 / 3.1415926535;
         rice = rotationMatrix(rice, fromleft, fromright, center, angle);
 
-        int[] max = FindABContext.MaxContext(rice);
-        int[] min = FindABContext.minContext(rice);
+        //cvSaveImage("C:\\Documents and Settings\\pratchaya\\Desktop\\r.jpg", rice);
+        max = FindABContext.MaxContext(rice, 255.0);
+        min = FindABContext.minContext(rice, 255.0);
 
         // cvLine(rice, cvPoint(max[0], max[1]), cvPoint(min[0], min[1]), CV_RGB(255, 0, 0), 1, 0, 0);
 
@@ -103,5 +88,25 @@ public class VerticalRotate {
 
         return rice;
 
+    }
+
+    public IplImage rotationMatrix(IplImage _image, int fromleft, int fromright, CvPoint2D32f center, double angle) {
+
+        IplImage dest = cvCloneImage(_image);
+        CvMat rot = cvCreateMat(2, 3, CV_32FC1);
+
+        if (fromleft >= fromright) {
+            cv2DRotationMatrix(center, -angle, 1.0, rot);
+
+        } else {
+            cv2DRotationMatrix(center, angle, 1.0, rot);
+
+        }
+
+        //if (Math.abs(angle) > 20) {
+        cvWarpAffine(dest, dest, rot);
+        //}
+
+        return dest;
     }
 }
